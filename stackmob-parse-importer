@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+import client
+import argparse
+import cmd
+import signal
+import sys
+import json
+import os
+import textwrap
+from util import hasattrs, read_api_key_and_secret_or_die, api_key_name, api_secret_name, path_name
+
+parser = argparse.ArgumentParser(prog = "stackmob-parse-importer", description='move data from Parse to StackMob')
+parser.add_argument("--%s"%("api_key"), help="the API key for your app", metavar="api-key", required=False, dest=api_key_name)
+parser.add_argument("--%s"%("api_secret"), help="the API secret for your app", metavar="api-secret", required=False, dest=api_secret_name)
+parser.add_argument("--%s"%("path"), help="the path to you unzipped parse export", metavar="path", required=False, dest=path_name)
+parser.add_argument("--verbose", help="output details on requests made to stackmob", dest="verbose", type=bool)
+
+
+def signal_handler(signal, frame):
+	print ""
+	sys.exit(0)
+
+def print_resp(resp):
+	print textwrap.dedent("""
+	response code: %d
+	response headers: %s
+	response body: %s
+	"""%(resp.status_code, resp.headers, resp.text))
+
+if __name__=="__main__":
+	signal.signal(signal.SIGINT, signal_handler)
+	args = parser.parse_args()
+	api_key, api_secret, path = read_api_key_and_secret_or_die(vars(args))
+
+	debug_level = 0
+	if(args.verbose):	
+		print "using verbose mode"
+		debug_level = 1
+	
+	api_client = client.DatastoreClient(api_key, api_secret, debug_level=debug_level)
+
+	print "Hello World"

@@ -138,6 +138,7 @@ if __name__=="__main__":
 				value = object[field]
 				if isinstance(value, dict):
 					subobject = value
+					print "got subobject", value
 					if "__type" in subobject:
 						type = subobject["__type"]
 						if type == "File":
@@ -158,7 +159,27 @@ if __name__=="__main__":
 							print "Skipping field %s. Pointers are not yet supported"%(field)
 						else:
 							object.pop(field, None)
-							print "Skipping field %s. Subobjects are not yet supported"%(field)
+							print "Skipping field %s with unexpected type %s. Looks like we missed this one"%(field, type)
+							
+					else:
+						# a plain old subobject
+						print "doing subobject"
+						for subfield in subobject.keys():
+							# trying to go more than one level deep would be inception
+							if isinstance(subobject[subfield], dict):
+								object.pop(field, None)
+								print "Skipping field %s. Subobjects are not supported beyond a depth of 1"%(field)
+								break
+						# StackMob doesn't do subobjects. We do make it easy to turn relations
+						# into an expanded json tree though. So to migrate subobjects, we put
+						# them into a related schema
+						new_schema_name = field
+						while new_schema_name in schemas:
+							# I dearly hope this only gets hit once if at all
+							new_schema_name = new_schema_name + "_object" 
+						print new_schema_name
+						typeHints[field] = new_schema_name
+
 
 			# append any relations we found in the join files earlier
 			for relation in relations.keys():

@@ -14,10 +14,10 @@ python stackmob-parse-importer --api_key=MY_KEY --api_secret=MY_SECRET --path=/p
 * Geopoints
 * Dates
 * Relations
+* Subobjects
 
 # For v1
 * Pointers
-* Subobjects
 
 # Futures
 * Binary Files

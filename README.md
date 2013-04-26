@@ -10,7 +10,7 @@ A simple python script to add exported Parse data to StackMob
 * `pip install stackmob-parse-migrator` or clone this repo
 * Create an app on [StackMob](stackmob.com)
 * If you're importing geopoints, create schema with geopoint fields using the same names you had on Parse. All other schema types can be inferred and you don't need to worry about them.
-* Get your api key and secret from [the dashboard](dashboard.stackmob.com)
+* Get your api key and secret from [the dashboard](https://dashboard.stackmob.com)
 * Unzip the parse export zip to somewhere on your harddrive
 
 # Usage

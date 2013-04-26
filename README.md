@@ -3,9 +3,18 @@
 
 <a href="https://www.stackmob.com/parse/">&larr; Back to Migrate from Parse</a> | Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for stackmob-parse-migrator</a>
 
-A simple python script to add exported Parse data to StackMob
+# What is this?
+
+A simple python script to add exported Parse zipped json data to StackMob.
+
+By running this python script against the Parse json export files, your schemas will automatically be created in StackMob, and your data will be populated to the datastores.  Subobjects are created with their own schemas so that they have their own collection - this is a StackMob implementation of relationships where we don't store subobjects within objects.  We store references to subojects by id and do a pseudo "join" on them to return it to you.
+
+After you run this script, your schemas and data should be in StackMob and you can then <a href="https://developer.stackmob.com/tutorials">get started with the SDKs!</a>
+
+
 
 # Setup
+
 * Install pip (`brew install python` works on mac)
 * `pip install stackmob-parse-migrator` or clone this repo
 * Create an app on [StackMob](https://www.stackmob.com)

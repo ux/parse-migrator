@@ -13,7 +13,7 @@ import time
 from util import hasattrs, read_api_key_and_secret_or_die, api_key_name, api_secret_name, path_name
 from subprocess import call
 
-parser = argparse.ArgumentParser(prog = "stackmob-parse-importer", description='move data from Parse to StackMob')
+parser = argparse.ArgumentParser(prog = "stackmob-parse-migrator", description='move data from Parse to StackMob')
 parser.add_argument("--%s"%("api_key"), help="the API key for your app", metavar="api-key", required=False, dest=api_key_name)
 parser.add_argument("--%s"%("api_secret"), help="the API secret for your app", metavar="api-secret", required=False, dest=api_secret_name)
 parser.add_argument("--%s"%("path"), help="the path to you unzipped parse export", metavar="path", required=False, dest=path_name)

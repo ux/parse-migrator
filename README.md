@@ -16,7 +16,9 @@ A simple python script to add exported Parse data to StackMob
 
 # Usage
 
-`stackmob-parse-migrator --api_key=MY_KEY --api_secret=MY_SECRET --path=/path/to/unzipped/folder --verbose 1`
+```js
+stackmob-parse-migrator --api_key=YOUR PUBLIC KEY --api_secret=YOUR PRIVATE KEY --path=/path/to/unzipped-json/folder --verbose 1
+```
 
 # Supported Import types
 * Primitives data types

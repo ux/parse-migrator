@@ -160,8 +160,8 @@ if __name__=="__main__":
               if field in typeHints and not typeHints[field] == related_schema:
                 print "Skipping field %s on schema %s to schema %s. Pointers to different schemas within one field are not allowed "%(field, schema, related_schema), typeHints
               else:
-								typeHints[field] = related_schema
-								object[field] = related_id
+                typeHints[field] = related_schema
+                object[field] = related_id
             else:
               object.pop(field, None)
               print "Skipping field %s with unexpected type %s. Looks like we missed this one"%(field, type)

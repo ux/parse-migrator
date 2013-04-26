@@ -14,7 +14,8 @@ A simple python script to add exported Parse data to StackMob
 * Unzip the parse export zip to somewhere on your harddrive
 
 # Usage
-stackmob-parse-migrator --api_key=MY_KEY --api_secret=MY_SECRET --path=/path/to/unzipped/folder --verbose 1
+
+`stackmob-parse-migrator --api_key=MY_KEY --api_secret=MY_SECRET --path=/path/to/unzipped/folder --verbose 1`
 
 # Supported Import types
 * Primitives data types

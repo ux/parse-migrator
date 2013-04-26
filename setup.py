@@ -3,11 +3,11 @@
 from setuptools import setup
 
 setup(name='stackmob-parse-migrator',
-version='0.1.0',
+version='1.0.0',
 description='A script to add exported Parse data to StackMob',
 author='Douglas Rapp',
 author_email='drapp@stackmob.com',
 url='http://github.com/stackmob/stackmob-parse-migrator',
 scripts=['stackmob-parse-migrator'],
-packages=['client'],
+packages=['client', 'util'],
 install_requires=['oauth', 'requests'])

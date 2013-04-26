@@ -44,9 +44,7 @@ def get_objects_from_file(path, file):
   f.close()
   return parse_json["results"]
 
-def get_schema_name(filename):
-  # cut off .json
-  name = filename[:-5] 
+def get_schema_name(name):
   # convert to the default user schema
   if name == "_User":
     return "user"
@@ -87,7 +85,7 @@ def sort_out_relations(theSchema, schemas, joins):
         objects = get_objects_from_file(path, schema)
         for object in objects:
           if object["objectId"] == arbitrary_id:
-            typeHints[field] = get_schema_name(schema)
+            typeHints[field] = get_schema_name(schema[:-5])
             break
 
   return relations, typeHints
@@ -113,7 +111,7 @@ if __name__=="__main__":
   schemas = filter(lambda x: x == "_User.json" or not x.startswith("_"), exported_files)
 
   for schema in schemas:
-    schema_name = get_schema_name(schema)
+    schema_name = get_schema_name(schema[:-5])
     schema_id = schema_name + "_id"
 
     relations, typeHints = sort_out_relations(schema, schemas, joins)
@@ -150,13 +148,13 @@ if __name__=="__main__":
               object[field] = iso_date_to_unix(date_string) 
             elif type == "Pointer":
               object.pop(field, None)
-              related_schema = subobject["className"]
+              related_schema = get_schema_name(subobject["className"])
               related_id = subobject["objectId"]
               if field in typeHints and not typeHints[field] == related_schema:
-                print "Skipping field %s. Pointers to different schemas within one field are not allowed"%(field)
+                print "Skipping field %s on schema %s to schema %s. Pointers to different schemas within one field are not allowed "%(field, schema, related_schema), typeHints
               else:
-								typeHints[field] = get_schema_name(related_schema + ".json")
-                object[field] = related_id
+								typeHints[field] = related_schema
+								object[field] = related_id
             else:
               object.pop(field, None)
               print "Skipping field %s with unexpected type %s. Looks like we missed this one"%(field, type)

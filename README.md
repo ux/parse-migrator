@@ -1,7 +1,9 @@
 <a href="https://github.com/stackmob/stackmob-parse-migrator">stackmob-parse-migrator</a>
 ============
 
-<a href="https://www.stackmob.com/parse/">&larr; Back to Migrate from Parse</a> | Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for stackmob-parse-migrator</a>
+<a href="https://www.stackmob.com/parse/">&larr; Back to Migrate from Parse</a> 
+
+Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for stackmob-parse-migrator</a>
 
 # What is this?
 

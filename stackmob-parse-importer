@@ -138,7 +138,6 @@ if __name__=="__main__":
 				value = object[field]
 				if isinstance(value, dict):
 					subobject = value
-					print "got subobject", value
 					if "__type" in subobject:
 						type = subobject["__type"]
 						if type == "File":
@@ -156,14 +155,18 @@ if __name__=="__main__":
 							object[field] = iso_date_to_unix(date_string) 
 						elif type == "Pointer":
 							object.pop(field, None)
-							print "Skipping field %s. Pointers are not yet supported"%(field)
+							related_schema = subobject["className"]
+							related_id = subobject["objectId"]
+							if field in typeHints and not typeHints[field] == related_schema:
+								print "Skipping field %s. Pointers to different schemas within one field are not allowed"%(field)
+							else:
+								typeHints[field] = related_schema
+								object[field] = related_id
 						else:
 							object.pop(field, None)
 							print "Skipping field %s with unexpected type %s. Looks like we missed this one"%(field, type)
-							
 					else:
 						# a plain old subobject
-						print "doing subobject"
 						for subfield in subobject.keys():
 							# trying to go more than one level deep would be inception
 							if isinstance(subobject[subfield], dict):
@@ -177,7 +180,6 @@ if __name__=="__main__":
 						while new_schema_name in schemas:
 							# I dearly hope this only gets hit once if at all
 							new_schema_name = new_schema_name + "_object" 
-						print new_schema_name
 						typeHints[field] = new_schema_name
 
 

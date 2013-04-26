@@ -155,7 +155,7 @@ if __name__=="__main__":
               if field in typeHints and not typeHints[field] == related_schema:
                 print "Skipping field %s. Pointers to different schemas within one field are not allowed"%(field)
               else:
-                typeHints[field] = related_schema
+								typeHints[field] = get_schema_name(related_schema + ".json")
                 object[field] = related_id
             else:
               object.pop(field, None)

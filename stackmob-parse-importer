@@ -8,6 +8,8 @@ import json
 import os
 import textwrap
 import json
+import dateutil.parser
+import time
 from util import hasattrs, read_api_key_and_secret_or_die, api_key_name, api_secret_name, path_name
 
 parser = argparse.ArgumentParser(prog = "stackmob-parse-importer", description='move data from Parse to StackMob')
@@ -27,6 +29,12 @@ def print_resp(resp):
 	response headers: %s
 	response body: %s
 	"""%(resp.status_code, resp.headers, resp.text))
+
+def rename_and_reformat_date(obj, old, new):
+	date = obj.pop(old, None)
+	newdate = dateutil.parser.parse(date)
+	object[new] = int(newdate.strftime("%s") + "000")
+
 
 if __name__=="__main__":
 	signal.signal(signal.SIGINT, signal_handler)
@@ -60,10 +68,30 @@ if __name__=="__main__":
 		parse_json = json.loads(file.read())
 		objects = parse_json["results"]
 		for object in objects:
-			id = object["objectId"]
-			object.pop("objectId", None)
+			# rename the id
+			id = object.pop("objectId", None)
 			object[schema_id] = id
-			#TODO: convert createdAt and updatedAt to utc
+
+			# reformat and rename the timestamps
+			rename_and_reformat_date(object, "createdAt", "createddate")
+			rename_and_reformat_date(object, "updatedAt", "lastmoddate")
+
+			# convert over complex datatypes
+			for field in object.keys():
+				value = object[field]
+				if isinstance(value, dict):
+					if "__type" in value:
+						type = value["__type"]
+						if type == "File":
+							object.pop(field, None)
+							print "Skipping field %s. Files are not yet supported"%(field)
+					else:
+						object.pop(field, None)
+						print "Skipping field %s. Subobjects are not yet supported"%(field)
+
+			# save the data twice so the timestamp fields get set. This is
+			# a bug that probably only would be noticed in a migration
+			api_client.post(schema_name, object, "")
 			print api_client.post(schema_name, object, "")
 
 #for join in joins:

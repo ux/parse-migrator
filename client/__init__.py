@@ -29,9 +29,9 @@ class BaseClient:
 		headers["Content-Type"] = "application/json"
 		headers["Accept"] = "application/vnd.stackmob+json; version=%d"%(self.api_version)
 		headers["X-StackMob-API-Key"] = str(self.api_key)
-		headers["User-Agent"] = "StackMob Python CLI"
+		headers["User-Agent"] = "StackMob Python"
 		headers["X-StackMob-Relations"] = typeHints
-		self._debug("%s %s"%(http_method, full_url))
+		self._debug("%s %s %s"%(http_method, full_url, body))
 		self._debug(headers)
 		
 		body_string = ''
@@ -43,16 +43,16 @@ class BaseClient:
 		if http_method == 'GET':
 			return requests.get(full_url, headers = headers)
 		elif http_method == 'POST':
-			return requests.post(full_url, headers = headers, body = body_string)
+			return requests.post(full_url, headers = headers, data = body_string)
 		elif http_method == 'PUT':
-			return requests.put(full_url, headers = headers, body = body_string)
+			return requests.put(full_url, headers = headers, data = body_string)
 		elif http_method == 'DELETE':
 			return requests.delete(full_url, headers = headers)
 	
 	def get(self, path):
 		return self._execute("GET", path, None)
-	def post(self, path, body):
-		return self._execute("POST", path, body)
+	def post(self, path, body, hints):
+		return self._execute("POST", path, body, hints)
 	def put(self, path, body):
 		return self._execute("PUT", path, body)
 	def delete(self, path):

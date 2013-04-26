@@ -7,6 +7,7 @@ import sys
 import json
 import os
 import textwrap
+import json
 from util import hasattrs, read_api_key_and_secret_or_die, api_key_name, api_secret_name, path_name
 
 parser = argparse.ArgumentParser(prog = "stackmob-parse-importer", description='move data from Parse to StackMob')
@@ -39,4 +40,43 @@ if __name__=="__main__":
 	
 	api_client = client.DatastoreClient(api_key, api_secret, debug_level=debug_level)
 
-	print "Hello World"
+	exported_files = os.listdir(path)
+
+	# Relations, stored separately from schemas
+	joins = filter(lambda x: x.startswith("_Join"), exported_files)
+
+	# The username schema has a special name
+	user = filter(lambda x: x == "_User.json", exported_files)
+
+	# Regular schemas
+	schemas = filter(lambda x: not x.startswith("_"), exported_files)
+
+
+	for schema in schemas:
+		schema_name = schema[:-5]
+		schema_id = schema_name + "_id"
+		schema_joins = filter(lambda x: x.endswith(schema), joins)
+		file = open(path + "/" + schema, "r")
+		parse_json = json.loads(file.read())
+		objects = parse_json["results"]
+		for object in objects:
+			id = object["objectId"]
+			object.pop("objectId", None)
+			object[schema_id] = id
+			#TODO: convert createdAt and updatedAt to utc
+			print api_client.post(schema_name, object, "")
+
+#for join in joins:
+		# we can get the name of the field and the schema from the join filename
+#parts = join.split(".")[0].split(":")
+#field = parts[1]
+#owner_schema = parts[2]
+
+		# however, there's no indication what schema it goes to. Parse seems to have
+		# globally unique ids, we do not. Figuring out the related schema is a bit hacky
+
+
+
+
+
+

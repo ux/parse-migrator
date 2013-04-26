@@ -57,13 +57,20 @@ if __name__=="__main__":
 	user = filter(lambda x: x == "_User.json", exported_files)
 
 	# Regular schemas
-	schemas = filter(lambda x: not x.startswith("_"), exported_files)
+	schemas = filter(lambda x: x == "_User.json" or not x.startswith("_"), exported_files)
 
 
 	for schema in schemas:
 		schema_name = schema[:-5]
+		
+		# convert to the default user schema
+		if schema_name == "_User":
+			schema_name = "user"
+
 		schema_id = schema_name + "_id"
 		schema_joins = filter(lambda x: x.endswith(schema), joins)
+
+
 		file = open(path + "/" + schema, "r")
 		parse_json = json.loads(file.read())
 		objects = parse_json["results"]

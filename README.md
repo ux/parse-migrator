@@ -13,9 +13,9 @@ python stackmob-parse-importer --api_key=MY_KEY --api_secret=MY_SECRET --path=/p
 * createddate/lastmoddate
 * Geopoints
 * Dates
+* Relations
 
 # For v1
-* Relations
 * Pointers
 * Subobjects
 

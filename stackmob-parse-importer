@@ -59,8 +59,8 @@ def sort_out_relations(theSchema, schemas, joins):
 	typeHints = {}
 
 	schema_joins = filter(lambda x: x.endswith(theSchema), joins)
-	# collate the join tables to be appended to the appropriate objects
-	# later on. In StackMob relations are fields on the object
+	# Organize the ids from join files to be appended to the appropriate
+	# objects. In StackMob relations are fields on the object
 	for join in schema_joins:
 		field = join.split(":")[1]
 		relation_objects = get_objects_from_file(path, join)
@@ -125,7 +125,8 @@ if __name__=="__main__":
 		objects = get_objects_from_file(path, schema)
 		for object in objects:
 			# rename the id
-			object[schema_id] = object.pop("objectId", None)
+			id = object.pop("objectId", None)
+			object[schema_id] = id
 
 			# reformat and rename the timestamps
 			rename_and_reformat_date(object, "createdAt", "createddate")
@@ -159,19 +160,18 @@ if __name__=="__main__":
 							object.pop(field, None)
 							print "Skipping field %s. Subobjects are not yet supported"%(field)
 
+			# append any relations we found in the join files earlier
+			for relation in relations.keys():
+				if id in relations[relation]:
+					object[relation] = relations[relation][id]
+
+			# this header lets stackmob infer relations
+			typeHintsHeader = "&".join(map(lambda hint: "=".join(hint), typeHints.items()))
+
 			# save the data twice so the timestamp fields get set. This is
 			# a bug that probably only would be noticed in a migration
-			api_client.post(schema_name, object, "")
-			print api_client.post(schema_name, object, "")
-
-#for join in joins:
-		# we can get the name of the field and the schema from the join filename
-#parts = join.split(".")[0].split(":")
-#field = parts[1]
-#owner_schema = parts[2]
-
-		# however, there's no indication what schema it goes to. Parse seems to have
-		# globally unique ids, we do not. Figuring out the related schema is a bit hacky
+			api_client.post(schema_name, object, typeHintsHeader)
+			print api_client.post(schema_name, object, typeHintsHeader)
 
 
 

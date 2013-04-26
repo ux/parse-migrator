@@ -3,6 +3,12 @@
 
 <a href="https://www.stackmob.com/parse/">&larr; Back to Migrate from Parse</a> | Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for stackmob-parse-migrator</a>
 
+After importing your data, check out how to move from Parse code to StackMob code:
+
+* <a href="https://developer.stackmob.com/parse/ios">https://developer.stackmob.com/parse/ios</a>
+* <a href="https://developer.stackmob.com/parse/android">https://developer.stackmob.com/parse/android</a>
+* <a href="https://developer.stackmob.com/parse/js">https://developer.stackmob.com/parse/js</a>
+
 # What is this?
 
 A simple python script to add exported Parse zipped json data to StackMob.

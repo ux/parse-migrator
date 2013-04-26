@@ -59,7 +59,10 @@ def sort_out_relations(theSchema, schemas, joins):
   # Organize the ids from join files to be appended to the appropriate
   # objects. In StackMob relations are fields on the object
   for join in schema_joins:
-    field = join.split(":")[1]
+    # people may need to rename the file because colons aren't really
+    # valid path chars and have weird behavior, especially on win
+    split_char = join[5]
+    field = join.split(split_char)[1]
     relation_objects = get_objects_from_file(path, join)
 
     # group the relations by owner. This would be a one

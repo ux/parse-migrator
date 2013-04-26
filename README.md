@@ -1,12 +1,21 @@
-stackmob-parse-migrator
+<a href="https://github.com/stackmob/stackmob-parse-migrator">stackmob-parse-migrator</a>
 ============
 
-A simple python script to add exported Parse data to StackMob
+<a href="https://www.stackmob.com/parse/">&larr; Back to Migrate from Parse</a> | Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for stackmob-parse-migrator</a>
+
+# What is this?
+
+A simple python script to add exported Parse zipped json data to StackMob.
+
+By running this python script against the Parse json export files, your schemas will automatically be created in StackMob, and your data will be populated to the datastores.  Subobjects are created with their own schemas so that they have their own collection - this is a StackMob implementation of relationships where we don't store subobjects within objects.  We store references to subojects by id and do a pseudo "join" on them to return it to you.  Expect your subobjects to have their own schemas after this migration.
+
+After you run this script, your schemas and data should be in StackMob and you can then <a href="https://developer.stackmob.com/tutorials">get started with the SDKs!</a>
+
+
 
 # Setup
+
 * Install pip (`brew install python` works on mac)
-* `pip install requests`
-* `pip install python-dateutil`
 * `pip install stackmob-parse-migrator` or clone this repo
 * Create an app on [StackMob](https://www.stackmob.com)
 * If you're importing geopoints, create schema with geopoint fields using the same names you had on Parse. All other schema types can be inferred and you don't need to worry about them.
@@ -16,7 +25,16 @@ A simple python script to add exported Parse data to StackMob
 
 # Usage
 
-`stackmob-parse-migrator --api_key=MY_KEY --api_secret=MY_SECRET --path=/path/to/unzipped/folder --verbose 1`
+```js
+stackmob-parse-migrator --api_key=YOUR PUBLIC KEY --api_secret=YOUR PRIVATE KEY --path=/path/to/unzipped-json/folder --verbose 1
+```
+
+After importing your data, check out an overview of Parse code to StackMob code:
+
+* <a href="https://developer.stackmob.com/parse/ios">https://developer.stackmob.com/parse/ios</a>
+* <a href="https://developer.stackmob.com/parse/android">https://developer.stackmob.com/parse/android</a>
+* <a href="https://developer.stackmob.com/parse/js">https://developer.stackmob.com/parse/js</a>
+
 
 # Supported Import types
 * Primitives data types
@@ -52,3 +70,7 @@ If your application uses relations in its schemas, then the zip archive you down
 ## Can't find the migrator script
 
 Windows may not be able to find `stackmob-parse-migrator` at the command prompt. If you installed the script using `pip`, then it should reside in `C:\Python27\Scripts`, or wherever your Python installation lives. Navigate to that directory, and execute the script directly from there, e.g. `python .\stackmob-parse-migrator --api_key=...`
+
+# Contributing
+
+This project is open source!  You are welcome to modify this and improve it as you come along.  There's such a variety of data out there that we hope we've covered, but just in case you find any corner cases, we and other developers would truly be grateful for your contributions :)  Thanks, and happy coding!

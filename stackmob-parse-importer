@@ -11,6 +11,7 @@ import json
 import dateutil.parser
 import time
 from util import hasattrs, read_api_key_and_secret_or_die, api_key_name, api_secret_name, path_name
+from subprocess import call
 
 parser = argparse.ArgumentParser(prog = "stackmob-parse-importer", description='move data from Parse to StackMob')
 parser.add_argument("--%s"%("api_key"), help="the API key for your app", metavar="api-key", required=False, dest=api_key_name)
@@ -38,6 +39,62 @@ def rename_and_reformat_date(obj, old, new):
 	date = obj.pop(old, None)
 	object[new] = iso_date_to_unix(date)
 
+def get_objects_from_file(path, file):
+	f = open("%s/%s"%(path, file), "r")
+	parse_json = json.loads(f.read())
+	f.close()
+	return parse_json["results"]
+
+def get_schema_name(filename):
+	# cut off .json
+	name = filename[:-5] 
+	# convert to the default user schema
+	if name == "_User":
+		return "user"
+	else:
+		return name
+
+def sort_out_relations(theSchema, schemas, joins):
+	relations = {}
+	typeHints = {}
+
+	schema_joins = filter(lambda x: x.endswith(theSchema), joins)
+	# collate the join tables to be appended to the appropriate objects
+	# later on. In StackMob relations are fields on the object
+	for join in schema_joins:
+		field = join.split(":")[1]
+		relation_objects = get_objects_from_file(path, join)
+
+		# group the relations by owner. This would be a one
+		# liner if I knew the functional way to do this in python
+		relation_map = {}
+		for relation in relation_objects:
+			owner_id = relation["owningId"]
+			related_id = relation["relatedId"]
+			if owner_id in relation_map:
+				relation_map[owner_id].append(related_id)
+			else:
+				relation_map[owner_id] = [related_id]
+		relations[field] = relation_map
+
+
+		# This bit is unfortunate. The export data give no indication
+		# what schema each relation goes to. This works for Parse
+		# because their ids are unique per-app, but ours are per-schema
+		# the only way to get the schema is to match up a related id with
+		# an id from one of the schemas
+		if len(relation_map) > 0:
+			arbitrary_id = relation_map[relation_map.keys()[0]][0]
+			for schema in schemas:
+				objects = get_objects_from_file(path, schema)
+				for object in objects:
+					if object["objectId"] == arbitrary_id:
+						typeHints[field] = get_schema_name(schema)
+						break
+
+	return relations, typeHints
+
+
 
 if __name__=="__main__":
 	signal.signal(signal.SIGINT, signal_handler)
@@ -59,25 +116,16 @@ if __name__=="__main__":
 	# Regular schemas
 	schemas = filter(lambda x: x == "_User.json" or not x.startswith("_"), exported_files)
 
-
 	for schema in schemas:
-		schema_name = schema[:-5]
-		
-		# convert to the default user schema
-		if schema_name == "_User":
-			schema_name = "user"
-
+		schema_name = get_schema_name(schema)
 		schema_id = schema_name + "_id"
-		schema_joins = filter(lambda x: x.endswith(schema), joins)
 
+		relations, typeHints = sort_out_relations(schema, schemas, joins)
 
-		file = open(path + "/" + schema, "r")
-		parse_json = json.loads(file.read())
-		objects = parse_json["results"]
+		objects = get_objects_from_file(path, schema)
 		for object in objects:
 			# rename the id
-			id = object.pop("objectId", None)
-			object[schema_id] = id
+			object[schema_id] = object.pop("objectId", None)
 
 			# reformat and rename the timestamps
 			rename_and_reformat_date(object, "createdAt", "createddate")

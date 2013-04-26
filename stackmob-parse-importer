@@ -30,10 +30,13 @@ def print_resp(resp):
 	response body: %s
 	"""%(resp.status_code, resp.headers, resp.text))
 
+
+def iso_date_to_unix(date):
+	return int(dateutil.parser.parse(date).strftime("%s") + "000")
+
 def rename_and_reformat_date(obj, old, new):
 	date = obj.pop(old, None)
-	newdate = dateutil.parser.parse(date)
-	object[new] = int(newdate.strftime("%s") + "000")
+	object[new] = iso_date_to_unix(date)
 
 
 if __name__=="__main__":
@@ -52,9 +55,6 @@ if __name__=="__main__":
 
 	# Relations, stored separately from schemas
 	joins = filter(lambda x: x.startswith("_Join"), exported_files)
-
-	# The username schema has a special name
-	user = filter(lambda x: x == "_User.json", exported_files)
 
 	# Regular schemas
 	schemas = filter(lambda x: x == "_User.json" or not x.startswith("_"), exported_files)
@@ -83,18 +83,33 @@ if __name__=="__main__":
 			rename_and_reformat_date(object, "createdAt", "createddate")
 			rename_and_reformat_date(object, "updatedAt", "lastmoddate")
 
+
 			# convert over complex datatypes
 			for field in object.keys():
 				value = object[field]
 				if isinstance(value, dict):
-					if "__type" in value:
-						type = value["__type"]
+					subobject = value
+					if "__type" in subobject:
+						type = subobject["__type"]
 						if type == "File":
 							object.pop(field, None)
 							print "Skipping field %s. Files are not yet supported"%(field)
-					else:
-						object.pop(field, None)
-						print "Skipping field %s. Subobjects are not yet supported"%(field)
+						elif type == "GeoPoint":
+							object.pop(field, None)
+							lat = subobject["latitude"]
+							lon = subobject["longitude"]
+							# just differe lat/lon names
+							object[field] = {"lat": lat, "lon": lon}
+						elif type == "Date":
+							object.pop(field, None)
+							date_string = subobject["iso"]
+							object[field] = iso_date_to_unix(date_string) 
+						elif type == "Pointer":
+							object.pop(field, None)
+							print "Skipping field %s. Pointers are not yet supported"%(field)
+						else:
+							object.pop(field, None)
+							print "Skipping field %s. Subobjects are not yet supported"%(field)
 
 			# save the data twice so the timestamp fields get set. This is
 			# a bug that probably only would be noticed in a migration

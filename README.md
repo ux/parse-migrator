@@ -41,6 +41,10 @@ A simple python script to add exported Parse data to StackMob
 
 # Windows Caveats
 
+## Python isn't installed
+
+Please visit http://www.python.org/getit/ to download a Python distribution for your Windows platform. We have tested this script successfully on Windows 7 using ActivePython 2.7.2.
+
 ## Bad filenames
 
 If your application uses relations in its schemas, then the zip archive you downloaded from Parse has these stored with filenames in a format similar to `_Join:<relationName>:_<schemaName>.json`. Neither OS X nor Windows can properly handle colons in filenames, though. OS X converts these to forward-slashes when you unarchive the zip, preserving a meaningful separator. Windows, however, converts these to underscores (and generates several error messages in the process), which loses the separator, as both Parse and StackMob support underscores in schema and relation names.

@@ -1,6 +1,10 @@
 <a href="https://github.com/stackmob/stackmob-parse-migrator">stackmob-parse-migrator</a>
 ============
 
+Visit the <a href="https://github.com/stackmob/stackmob-parse-migrator">Open Source GitHub Repo for <code>stackmob-parse-migrator</code></a>
+
+<a href="https://www.stackmob.com/parse/">Back to &larr;Migrate from Parse</a>
+
 A simple python script to add exported Parse data to StackMob
 
 # Setup

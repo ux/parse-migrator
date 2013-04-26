@@ -47,12 +47,7 @@ Please visit http://www.python.org/getit/ to download a Python distribution for 
 
 ## Bad filenames
 
-If your application uses relations in its schemas, then the zip archive you downloaded from Parse has these stored with filenames in a format similar to `_Join:<relationName>:_<schemaName>.json`. Neither OS X nor Windows can properly handle colons in filenames, though. OS X converts these to forward-slashes when you unarchive the zip, preserving a meaningful separator. Windows, however, converts these to underscores (and generates several error messages in the process), which loses the separator, as both Parse and StackMob support underscores in schema and relation names.
-
-We recommend that you:
-* Unarchive the zip file to a directory of your choosing
-* Open the zip file in Windows Explorer or another archive viewer to see which files were affected
-* Rename any affected files using a system-safe separator, e.g. `Join#<relationName>#_<schemaName>.json`
+If your application uses relations in its schemas, then the zip archive you downloaded from Parse has files of the form `_Join:<relationName>:_<schemaName>.json`. Windows handles this badly, and some zip clients do too.  We recommend that you rename these files after unarchiving to the form `_Join#<relationName>#_<schemaName>.json`
 
 ## Can't find the migrator script
 

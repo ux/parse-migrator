@@ -27,7 +27,7 @@ After you run this script, your schemas and data should be in StackMob and you c
 
 # Usage
 
-```js
+```shell
 stackmob-parse-migrator --api_key=YOUR PUBLIC KEY --api_secret=YOUR PRIVATE KEY --path=/path/to/unzipped-json/folder --verbose 1
 ```
 

@@ -28,7 +28,7 @@ After you run this script, your schemas and data should be in StackMob and you c
 # Usage
 
 ```js
-stackmob-parse-migrator --api_key=YOUR PUBLIC KEY --api_secret=YOUR PRIVATE KEY --path=/path/to/unzipped-json/folder --verbose 1
+stackmob-parse-migrator --api_key=YOUR_PUBLIC_KEY --api_secret=YOUR_PRIVATE_KEY --path=/path/to/unzipped-json/folder --verbose 1
 ```
 
 After importing your data, check out an overview of Parse code to StackMob code:

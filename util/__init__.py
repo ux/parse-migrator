@@ -21,7 +21,7 @@ def _read_api_key_and_secret_and_path(args_dict):
 		
 def read_api_key_and_secret_or_die(args_dict):
 	api_key, api_secret, path = _read_api_key_and_secret_and_path(args_dict)
-	if api_key == None or api_secret == None or path_name == None:
-		print textwrap.dedent("api_key, api_secret and path must both be specified on the command line")
-		sys.exit(1)
+	#if api_key == None or api_secret == None or path_name == None:
+	#	print textwrap.dedent("api_key, api_secret and path must both be specified on the command line")
+	#	sys.exit(1)
 	return api_key, api_secret, path

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import client
+#import client
 import argparse
 import cmd
 import signal
@@ -36,6 +36,14 @@ def iso_date_to_unix(date):
   d = dateutil.parser.parse(date)
   return int((d - datetime.datetime(1970,1,1,tzinfo=d.tzinfo)).total_seconds() * 1000)
 
+def write_object(name, object):
+    dirname = "export/" + name
+    if not os.path.exists(name):
+        os.makedirs(name)
+    fo = open(name + "/data.json", "a")
+    fo.write(unicode(object) + "\n")
+    fo.close()
+
 def rename_and_reformat_date(obj, old, new):
   date = obj.pop(old, None)
   object[new] = iso_date_to_unix(date)
@@ -47,6 +55,7 @@ def get_objects_from_file(path, file):
   finally:
     f.close()
   return parse_json["results"]
+
 
 def get_schema_name(name):
   # convert to the default user schema
@@ -101,13 +110,15 @@ if __name__=="__main__":
   signal.signal(signal.SIGINT, signal_handler)
   args = parser.parse_args()
   api_key, api_secret, path = read_api_key_and_secret_or_die(vars(args))
+  path = "../data"
 
   debug_level = 0
   if(args.verbose): 
     print "using verbose mode"
     debug_level = 1
+    print "api_key %(api_key)s api_secret %(api_secret)s path %(path)s" % locals()
   
-  api_client = client.DatastoreClient(api_key, api_secret, debug_level=debug_level)
+  #api_client = client.DatastoreClient(api_key, api_secret, debug_level=debug_level)
 
   exported_files = os.listdir(path)
 
@@ -190,7 +201,8 @@ if __name__=="__main__":
       # this header lets stackmob infer relations
       typeHintsHeader = "&".join(map(lambda hint: "=".join(hint), typeHints.items()))
 
+      write_object(schema_name, object)
       # save the data twice so the timestamp fields get set. This is
       # a bug that probably only would be noticed in a migration
-      api_client.post(schema_name, object, typeHintsHeader)
-      print api_client.post(schema_name, object, typeHintsHeader)
+      #api_client.post(schema_name, object, typeHintsHeader)
+      #print api_client.post(schema_name, object, typeHintsHeader)

@@ -3,7 +3,7 @@
 
 # What is this?
 
-Since StackMob is now defunct, forking this code to support moving a parse dataset to a different backend.
+Since StackMob is now defunct, forking this code to support moving a Parse dataset to a different backend.
 
 see [stackmob-parse-migrator](https://github.com/stackmob/stackmob-parse-migrator) for the original project
 
@@ -12,24 +12,15 @@ see [stackmob-parse-migrator](https://github.com/stackmob/stackmob-parse-migrato
 
 * Install pip (`brew install python` works on mac)
 * `pip install stackmob-parse-migrator` or clone this repo
-* Create an app on [StackMob](https://www.stackmob.com)
 * If you're importing geopoints, create schema with geopoint fields using the same names you had on Parse. All other schema types can be inferred and you don't need to worry about them.
-* Get your api key and secret from [the dashboard](https://dashboard.stackmob.com/settings)
 * Unzip the parse export zip to somewhere on your harddrive
 * Windows only: Rename any relation JSON files (see Windows Caveats below)
 
 # Usage
 
 ```js
-stackmob-parse-migrator --api_key=YOUR_PUBLIC_KEY --api_secret=YOUR_PRIVATE_KEY --path=/path/to/unzipped-json/folder --verbose 1
+stackmob-parse-migrator --path=/path/to/unzipped-json/folder --verbose 1
 ```
-
-After importing your data, check out an overview of Parse code to StackMob code:
-
-* <a href="https://developer.stackmob.com/parse/ios">https://developer.stackmob.com/parse/ios</a>
-* <a href="https://developer.stackmob.com/parse/android">https://developer.stackmob.com/parse/android</a>
-* <a href="https://developer.stackmob.com/parse/js">https://developer.stackmob.com/parse/js</a>
-
 
 # Supported Import types
 * Primitives data types

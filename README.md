@@ -8,18 +8,10 @@ Since StackMob is now defunct, forking this code to support moving a Parse datas
 see [stackmob-parse-migrator](https://github.com/stackmob/stackmob-parse-migrator) for the original project
 
 
-# Setup
-
-* Install pip (`brew install python` works on mac)
-* `pip install stackmob-parse-migrator` or clone this repo
-* If you're importing geopoints, create schema with geopoint fields using the same names you had on Parse. All other schema types can be inferred and you don't need to worry about them.
-* Unzip the parse export zip to somewhere on your harddrive
-* Windows only: Rename any relation JSON files (see Windows Caveats below)
-
 # Usage
 
-```js
-stackmob-parse-migrator --path=/path/to/unzipped-json/folder --verbose 1
+```shell
+stackmob-parse-migrator --import-path=/path/to/unzipped-json/folder --export-path=/path/to/write/processed/data
 ```
 
 # Supported Import types

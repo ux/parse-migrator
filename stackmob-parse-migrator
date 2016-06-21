@@ -54,7 +54,7 @@ def get_objects_from_file(path, file):
 def get_schema_name(name):
   # convert to the default user schema
   if name == "_User":
-    return "user"
+    return "User"
   else:
     return name
 
@@ -127,8 +127,8 @@ if __name__=="__main__":
       object[schema_id] = id
 
       # reformat and rename the timestamps
-      rename_and_reformat_date(object, "createdAt", "createddate")
-      rename_and_reformat_date(object, "updatedAt", "lastmoddate")
+      rename_and_reformat_date(object, "createdAt", "createdAt")
+      rename_and_reformat_date(object, "updatedAt", "updatedAt")
 
       # convert over complex datatypes
       for field in object.keys():
